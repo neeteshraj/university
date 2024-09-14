@@ -43,7 +43,6 @@ public class Student extends User {
         return totalCredits;
     }
 
-
     public void viewGrades() {
         if (completedCourses.isEmpty()) {
             System.out.println("No completed courses found.");
@@ -199,7 +198,6 @@ public class Student extends User {
         System.out.println("Successfully dropped course: " + courseCode);
     }
 
-
     public void completeSemester() {
         this.semester++;
         completedCourses.addAll(registeredCourses);
@@ -236,6 +234,8 @@ public class Student extends User {
         System.out.println("5. Complete Semester");
         System.out.println("6. View Grades");
         System.out.println("7. Calculate SGPA/CGPA");
-        System.out.println("8. Logout");
+        System.out.println("8. Submit Complaint");
+        System.out.println("9. View Complaints");
+        System.out.println("10. Logout");
     }
 }

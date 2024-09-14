@@ -53,7 +53,6 @@ public class AdminService {
         System.out.println("Course added successfully.");
     }
 
-
     public static void deleteCourse(Scanner scanner) {
         System.out.println("Delete Course");
         System.out.println("Enter course code to delete:");
@@ -63,6 +62,35 @@ public class AdminService {
             System.out.println("Course deleted successfully.");
         } else {
             System.out.println("Course not found.");
+        }
+    }
+
+    public static void manageCourses(Scanner scanner) {
+        while (true) {
+            System.out.println("Course Management Menu");
+            System.out.println("1. View Courses");
+            System.out.println("2. Add Course");
+            System.out.println("3. Delete Course");
+            System.out.println("4. Go Back");
+
+            int choice = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (choice) {
+                case 1:
+                    viewCourses();
+                    break;
+                case 2:
+                    addCourse(scanner);
+                    break;
+                case 3:
+                    deleteCourse(scanner);
+                    break;
+                case 4:
+                    return;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
         }
     }
 }

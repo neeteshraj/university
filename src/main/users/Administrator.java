@@ -7,6 +7,6 @@ public class Administrator extends User {
 
     @Override
     public void displayMenu() {
-        System.out.println("Admin Menu: \n1. Manage Users \n2. Manage Courses");
+        System.out.println("Admin Menu: \n1. Manage Courses");
     }
 }

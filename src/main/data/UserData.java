@@ -5,9 +5,11 @@ import main.users.User;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class UserData {
     private static final List<User> users = new ArrayList<>();
+    private static final List<Complaint> complaints = new ArrayList<>();
 
     static {
         users.add(new Administrator("Admin", "admin@university.com", "admin123"));
@@ -33,5 +35,28 @@ public class UserData {
             }
         }
         return false;
+    }
+
+    public static void submitComplaint(String studentEmail, String description) {
+        complaints.add(new Complaint(studentEmail, description));
+    }
+
+    public static List<Complaint> getComplaintsByStudent(String email) {
+        return complaints.stream()
+                .filter(c -> c.getStudentEmail().equals(email))
+                .collect(Collectors.toList());
+    }
+
+    public static List<Complaint> getAllComplaints() {
+        return new ArrayList<>(complaints);
+    }
+
+    public static void resolveComplaint(int id) {
+        for (Complaint complaint : complaints) {
+            if (complaint.getId() == id) {
+                complaint.setStatus("Resolved");
+                return;
+            }
+        }
     }
 }
