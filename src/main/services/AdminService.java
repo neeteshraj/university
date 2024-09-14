@@ -14,8 +14,14 @@ public class AdminService {
             System.out.println("No courses available.");
         } else {
             for (Course course : courses) {
-                System.out.println(course);
-                System.out.println("------------------------------");
+                System.out.println("======================================");
+                System.out.println("Course Code: " + course.getCourseCode());
+                System.out.println("Title: " + course.getTitle());
+                System.out.println("Professor: " + course.getProfessor());
+                System.out.println("Timings: " + course.getTimings());
+                System.out.println("Location: " + course.getLocation());
+                System.out.println("Semester: "+course.getSemester());
+                System.out.println("======================================");
             }
         }
     }

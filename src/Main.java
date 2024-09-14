@@ -6,54 +6,47 @@ public class Main {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        boolean running = true;
-
-        while (running) {
-            System.out.println("Welcome to the University System");
+        System.out.println("Welcome to the University System");
+        while (true) {
             System.out.println("1. Enter the Application");
             System.out.println("2. Exit");
 
             int choice = scanner.nextInt();
             scanner.nextLine();
 
-            switch (choice) {
-                case 1:
-                    showApplicationMenu(scanner);
-                    break;
-                case 2:
-                    System.out.println("Exiting...");
-                    running = false;
-                    break;
-                default:
-                    System.out.println("Invalid option, try again.");
-            }
-        }
-    }
+            if (choice == 1) {
+                System.out.println("Application Menu");
+                System.out.println("1. Create Account (Student/Professor)");
+                System.out.println("2. Login (Student/Professor)");
+                System.out.println("3. Admin Login");
+                System.out.println("4. Exit");
 
-    private static void showApplicationMenu(Scanner scanner) {
-        boolean inAppMenu = true;
-        while (inAppMenu) {
-            System.out.println("Application Menu");
-            System.out.println("1. Create Account (Student/Professor)");
-            System.out.println("2. Login");
-            System.out.println("3. Exit");
+                int appChoice = scanner.nextInt();
+                scanner.nextLine();
 
-            int choice = scanner.nextInt();
-            scanner.nextLine();
-
-            switch (choice) {
-                case 1:
-                    UserService.createUser(scanner);
-                    break;
-                case 2:
-                    UserService.loginUser(scanner);
-                    break;
-                case 3:
-                    System.out.println("Exiting...");
-                    inAppMenu = false;
-                    break;
-                default:
-                    System.out.println("Invalid option, try again.");
+                switch (appChoice) {
+                    case 1:
+                        UserService.createUser(scanner);
+                        break;
+                    case 2:
+                        UserService.loginUser(scanner);
+                        break;
+                    case 3:
+                        UserService.adminLogin(scanner);
+                        break;
+                    case 4:
+                        System.out.println("Exiting...");
+                        scanner.close();
+                        return;
+                    default:
+                        System.out.println("Invalid choice. Please try again.");
+                }
+            } else if (choice == 2) {
+                System.out.println("Exiting...");
+                scanner.close();
+                return;
+            } else {
+                System.out.println("Invalid choice. Please try again.");
             }
         }
     }

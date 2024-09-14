@@ -137,6 +137,8 @@ public class UserService {
                 case 1:
                     AdminService.manageCourses(scanner);
                     break;
+                case 2:
+                    return;
                 default:
                     System.out.println("Invalid choice. Please try again.");
             }
@@ -164,53 +166,6 @@ public class UserService {
             loginProfessor(scanner, (Professor) user);
         } else {
             System.out.println("No user found in the data.");
-        }
-    }
-
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Welcome to the University System");
-        while (true) {
-            System.out.println("1. Enter the Application");
-            System.out.println("2. Exit");
-
-            int choice = scanner.nextInt();
-            scanner.nextLine();
-
-            if (choice == 1) {
-                System.out.println("Application Menu");
-                System.out.println("1. Create Account (Student/Professor)");
-                System.out.println("2. Login (Student/Professor)");
-                System.out.println("3. Admin Login");
-                System.out.println("4. Exit");
-
-                int appChoice = scanner.nextInt();
-                scanner.nextLine();
-
-                switch (appChoice) {
-                    case 1:
-                        createUser(scanner);
-                        break;
-                    case 2:
-                        loginUser(scanner);
-                        break;
-                    case 3:
-                        adminLogin(scanner);
-                        break;
-                    case 4:
-                        System.out.println("Exiting...");
-                        scanner.close();
-                        return;
-                    default:
-                        System.out.println("Invalid choice. Please try again.");
-                }
-            } else if (choice == 2) {
-                System.out.println("Exiting...");
-                scanner.close();
-                return;
-            } else {
-                System.out.println("Invalid choice. Please try again.");
-            }
         }
     }
 }
