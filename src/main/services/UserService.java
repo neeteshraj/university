@@ -138,6 +138,8 @@ public class UserService {
                     AdminService.manageCourses(scanner);
                     break;
                 case 2:
+                    AdminService.manageStudents(scanner);
+                case 3:
                     return;
                 default:
                     System.out.println("Invalid choice. Please try again.");

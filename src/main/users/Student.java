@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Student extends User {
-    private final String branchName;
+    private String branchName;
     private int semester;
     private final List<Course> completedCourses = new ArrayList<>();
     private final List<Course> registeredCourses = new ArrayList<>();
@@ -23,6 +23,10 @@ public class Student extends User {
         return branchName;
     }
 
+    public void setBranchName(String branchName) {
+        this.branchName = branchName;
+    }
+
     public int getSemester() {
         return semester;
     }
@@ -30,6 +34,7 @@ public class Student extends User {
     public void setSemester(int semester) {
         this.semester = semester;
     }
+
 
     public List<Course> getCompletedCourses() {
         return completedCourses;
@@ -54,6 +59,7 @@ public class Student extends User {
             System.out.println("Course Code: " + course.getCourseCode() + " | Grade: " + course.getGrade());
         }
     }
+
 
     public double calculateSGPA() {
         double totalPoints = 0;
@@ -113,6 +119,7 @@ public class Student extends User {
                 return 0.0;
         }
     }
+
 
     public void viewAvailableCourses() {
         List<Course> courses = CourseCatalog.getCoursesForSemester(this.semester);

@@ -1,6 +1,7 @@
 package main.data;
 
 import main.users.Administrator;
+import main.users.Student;
 import main.users.User;
 
 import java.util.ArrayList;
@@ -59,4 +60,20 @@ public class UserData {
             }
         }
     }
+
+    public static List<Student> getStudents() {
+        return users.stream()
+                .filter(user -> user instanceof Student)
+                .map(user -> (Student) user)
+                .collect(Collectors.toList());
+    }
+
+    public static Student getStudentByEmail(String email) {
+        return users.stream()
+                .filter(user -> user instanceof Student && user.getEmail().equals(email))
+                .map(user -> (Student) user)
+                .findFirst()
+                .orElse(null);
+    }
+
 }
