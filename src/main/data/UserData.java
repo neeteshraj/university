@@ -1,5 +1,6 @@
 package main.data;
 
+import main.complaints.Complaint;
 import main.users.Administrator;
 import main.users.Student;
 import main.users.User;
@@ -49,16 +50,7 @@ public class UserData {
     }
 
     public static List<Complaint> getAllComplaints() {
-        return new ArrayList<>(complaints);
-    }
-
-    public static void resolveComplaint(int id) {
-        for (Complaint complaint : complaints) {
-            if (complaint.getId() == id) {
-                complaint.setStatus("Resolved");
-                return;
-            }
-        }
+        return new ArrayList<>(complaints); // Return a copy of the complaints list
     }
 
     public static List<Student> getStudents() {
@@ -75,5 +67,4 @@ public class UserData {
                 .findFirst()
                 .orElse(null);
     }
-
 }

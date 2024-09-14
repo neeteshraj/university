@@ -1,5 +1,6 @@
 package main.services;
 
+import main.complaints.Complaint;
 import main.data.CourseData;
 import main.courses.Course;
 import main.data.UserData;
@@ -87,6 +88,35 @@ public class AdminService {
             System.out.println("Course deleted successfully.");
         } else {
             System.out.println("Course not found.");
+        }
+    }
+
+    public static void manageComplaints(Scanner scanner) {
+        while (true) {
+            System.out.println("Complaint Management Menu");
+            System.out.println("1. View All Complaints");
+            System.out.println("2. Resolve Complaint by ID");
+            System.out.println("3. Set Complaint to Pending");
+            System.out.println("4. Go Back");
+
+            int choice = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (choice) {
+                case 1:
+                    viewAllComplaints();
+                    break;
+                case 2:
+                    resolveComplaintById(scanner);
+                    break;
+                case 3:
+                    setComplaintToPending(scanner);
+                    break;
+                case 4:
+                    return;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
         }
     }
 
@@ -257,5 +287,57 @@ public class AdminService {
                     System.out.println("Invalid choice. Please try again.");
             }
         }
+    }
+
+    private static void viewAllComplaints() {
+        List<Complaint> complaints = UserData.getAllComplaints();
+        if (complaints.isEmpty()) {
+            System.out.println("No complaints available.");
+        } else {
+            for (Complaint complaint : complaints) {
+                System.out.println("====================================");
+                System.out.println("Complaint ID: " + complaint.getId());
+                System.out.println("Student Email: " + complaint.getStudentEmail());
+                System.out.println("Description: " + complaint.getDescription());
+                System.out.println("Status: " + complaint.getStatus());
+                System.out.println("====================================");
+            }
+        }
+    }
+
+    private static void resolveComplaintById(Scanner scanner) {
+        System.out.println("Enter the ID of the complaint to resolve:");
+        int id = Integer.parseInt(scanner.nextLine());
+
+        Complaint complaint = UserData.getAllComplaints().stream()
+                .filter(c -> c.getId() == id)
+                .findFirst()
+                .orElse(null);
+
+        if (complaint == null) {
+            System.out.println("Complaint not found.");
+            return;
+        }
+
+        complaint.setStatus("Resolved");
+        System.out.println("Complaint resolved successfully.");
+    }
+
+    private static void setComplaintToPending(Scanner scanner) {
+        System.out.println("Enter the ID of the complaint to set to pending:");
+        int id = Integer.parseInt(scanner.nextLine());
+
+        Complaint complaint = UserData.getAllComplaints().stream()
+                .filter(c -> c.getId() == id)
+                .findFirst()
+                .orElse(null);
+
+        if (complaint == null) {
+            System.out.println("Complaint not found.");
+            return;
+        }
+
+        complaint.setStatus("Pending");
+        System.out.println("Complaint status updated to pending.");
     }
 }

@@ -1,6 +1,6 @@
 package main.services;
 
-import main.data.Complaint;
+import main.complaints.Complaint;
 import main.data.UserData;
 import main.users.Administrator;
 import main.users.Professor;
@@ -140,6 +140,8 @@ public class UserService {
                 case 2:
                     AdminService.manageStudents(scanner);
                 case 3:
+                    AdminService.manageComplaints(scanner);
+                case 4:
                     return;
                 default:
                     System.out.println("Invalid choice. Please try again.");
