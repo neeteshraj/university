@@ -6,6 +6,9 @@ import main.courses.Course;
 import main.data.UserData;
 import main.users.Student;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -91,32 +94,69 @@ public class AdminService {
         }
     }
 
-    public static void manageComplaints(Scanner scanner) {
+    public static void handleComplaintManagement(Scanner scanner) {
         while (true) {
             System.out.println("Complaint Management Menu");
             System.out.println("1. View All Complaints");
-            System.out.println("2. Resolve Complaint by ID");
-            System.out.println("3. Set Complaint to Pending");
-            System.out.println("4. Go Back");
+            System.out.println("2. Filter Complaints by Status");
+            System.out.println("3. Filter Complaints by Date");
+            System.out.println("4. Resolve Complaint by ID");
+            System.out.println("5. Set Complaint to Pending");
+            System.out.println("6. Go Back");
 
-            int choice = scanner.nextInt();
-            scanner.nextLine();
+            String option = scanner.nextLine();
 
-            switch (choice) {
-                case 1:
+            switch (option) {
+                case "1":
                     viewAllComplaints();
                     break;
-                case 2:
+                case "2":
+                    filterComplaintsByStatus(scanner);
+                    break;
+                case "3":
+                    filterComplaintsByDate(scanner);
+                    break;
+                case "4":
                     resolveComplaintById(scanner);
                     break;
-                case 3:
+                case "5":
                     setComplaintToPending(scanner);
                     break;
-                case 4:
+                case "6":
                     return;
                 default:
-                    System.out.println("Invalid choice. Please try again.");
+                    System.out.println("Invalid option.");
             }
+        }
+    }
+
+    private static void filterComplaintsByStatus(Scanner scanner) {
+        System.out.println("Enter status to filter by (Pending/Resolved): ");
+        String status = scanner.nextLine();
+        List<Complaint> filteredComplaints = UserData.filterComplaintsByStatus(status);
+
+        if (filteredComplaints.isEmpty()) {
+            System.out.println("No complaints with status: " + status);
+        } else {
+            filteredComplaints.forEach(AdminService::printComplaintDetails);
+        }
+    }
+
+    private static void filterComplaintsByDate(Scanner scanner) {
+        System.out.println("Enter date to filter by (yyyy-MM-dd): ");
+        String dateInput = scanner.nextLine();
+
+        try {
+            LocalDate date = LocalDate.parse(dateInput);
+            List<Complaint> filteredComplaints = UserData.filterComplaintsByDate(date);
+
+            if (filteredComplaints.isEmpty()) {
+                System.out.println("No complaints on date: " + date);
+            } else {
+                filteredComplaints.forEach(AdminService::printComplaintDetails);
+            }
+        } catch (DateTimeParseException e) {
+            System.out.println("Invalid date format. Please enter in the format yyyy-MM-dd.");
         }
     }
 
@@ -213,6 +253,12 @@ public class AdminService {
         String courseCode = scanner.nextLine();
 
         Course courseToUpdate = null;
+
+        List<Course> currentCourses = student.getCurrentCourses();
+        if (currentCourses == null) {
+            currentCourses = new ArrayList<>();
+        }
+
         for (Course course : student.getCompletedCourses()) {
             if (course.getCourseCode().equals(courseCode)) {
                 courseToUpdate = course;
@@ -221,7 +267,16 @@ public class AdminService {
         }
 
         if (courseToUpdate == null) {
-            System.out.println("Course not found in completed courses.");
+            for (Course course : currentCourses) {
+                if (course.getCourseCode().equals(courseCode)) {
+                    courseToUpdate = course;
+                    break;
+                }
+            }
+        }
+
+        if (courseToUpdate == null) {
+            System.out.println("Course not found in student records. Please verify the course code.");
             return;
         }
 
@@ -231,6 +286,7 @@ public class AdminService {
         courseToUpdate.setGrade(newGrade);
         System.out.println("Course grade updated successfully.");
     }
+
 
 
     public static void updateStudentPersonalInfo(Scanner scanner) {
@@ -319,9 +375,15 @@ public class AdminService {
             return;
         }
 
+        System.out.println("Enter the resolution details:");
+        String resolutionDetails = scanner.nextLine();
+
         complaint.setStatus("Resolved");
+        complaint.setResolutionDetails(resolutionDetails);
+
         System.out.println("Complaint resolved successfully.");
     }
+
 
     private static void setComplaintToPending(Scanner scanner) {
         System.out.println("Enter the ID of the complaint to set to pending:");
@@ -339,5 +401,16 @@ public class AdminService {
 
         complaint.setStatus("Pending");
         System.out.println("Complaint status updated to pending.");
+    }
+
+    private static void printComplaintDetails(Complaint complaint) {
+        System.out.println("====================================");
+        System.out.println("Complaint ID: " + complaint.getId());
+        System.out.println("Student Email: " + complaint.getStudentEmail());
+        System.out.println("Description: " + complaint.getDescription());
+        System.out.println("Status: " + complaint.getStatus());
+        System.out.println("Submission Date: " + complaint.getSubmissionDate());
+        System.out.println("Resolution Details: " + complaint.getResolutionDetails());
+        System.out.println("====================================");
     }
 }

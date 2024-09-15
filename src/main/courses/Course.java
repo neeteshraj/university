@@ -11,6 +11,7 @@ public class Course {
     private final String location;
     private String grade;
 
+
     public Course(String courseCode, String title, String professor, int credits, String prerequisites, String timings, int semester, String location) {
         this.courseCode = courseCode;
         this.title = title;

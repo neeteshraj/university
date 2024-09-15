@@ -12,11 +12,16 @@ public class Student extends User {
     private final List<Course> completedCourses = new ArrayList<>();
     private final List<Course> registeredCourses = new ArrayList<>();
     private int totalCredits = 0;
+    private List<Course> currentCourses = new ArrayList<>();
 
     public Student(String name, String email, String password, String branchName, int semester) {
         super(name, email, password);
         this.branchName = branchName;
         this.semester = semester;
+    }
+
+    public List<Course> getCurrentCourses() {
+        return currentCourses != null ? currentCourses : new ArrayList<>();
     }
 
     public String getBranchName() {
@@ -34,7 +39,6 @@ public class Student extends User {
     public void setSemester(int semester) {
         this.semester = semester;
     }
-
 
     public List<Course> getCompletedCourses() {
         return completedCourses;
@@ -60,34 +64,12 @@ public class Student extends User {
         }
     }
 
-
     public double calculateSGPA() {
         double totalPoints = 0;
         int totalCredits = 0;
 
-        for (Course course : completedCourses) {
-            if (course.getGrade().equals("Not Assigned")) {
-                continue; // Skip courses with no grade
-            }
-
-            double gradePoints = convertGradeToPoints(course.getGrade());
-            totalPoints += gradePoints * course.getCredits();
-            totalCredits += course.getCredits();
-        }
-
-        if (totalCredits == 0) {
-            return 0;
-        }
-
-        return totalPoints / totalCredits;
-    }
-
-    public double calculateCGPA() {
-        double totalPoints = 0;
-        int totalCredits = 0;
-
-        for (Course course : completedCourses) {
-            if (course.getGrade().equals("Not Assigned")) {
+        for (Course course : currentCourses) {
+            if ("Not Assigned".equals(course.getGrade())) {
                 continue;
             }
 
@@ -96,11 +78,28 @@ public class Student extends User {
             totalCredits += course.getCredits();
         }
 
-        if (totalCredits == 0) {
-            return 0;
+        return totalCredits == 0 ? 0 : totalPoints / totalCredits;
+    }
+
+    public double calculateCGPA() {
+        double totalPoints = 0;
+        int totalCredits = 0;
+
+        for (Course course : completedCourses) {
+            if ("Not Assigned".equals(course.getGrade())) {
+                continue;
+            }
+
+            double gradePoints = convertGradeToPoints(course.getGrade());
+            totalPoints += gradePoints * course.getCredits();
+            totalCredits += course.getCredits();
         }
 
-        return totalPoints / totalCredits;
+        double currentSemesterSGPA = calculateSGPA();
+        totalPoints += currentSemesterSGPA * getTotalCredits();
+        totalCredits += getTotalCredits();
+
+        return totalCredits == 0 ? 0 : totalPoints / totalCredits;
     }
 
     private double convertGradeToPoints(String grade) {
@@ -119,7 +118,6 @@ public class Student extends User {
                 return 0.0;
         }
     }
-
 
     public void viewAvailableCourses() {
         List<Course> courses = CourseCatalog.getCoursesForSemester(this.semester);
@@ -141,19 +139,34 @@ public class Student extends User {
 
     private boolean prerequisitesMet(Course course) {
         String prerequisites = course.getPrerequisites();
-        if (prerequisites == null || prerequisites.equals("None")) {
+
+        if (prerequisites == null || prerequisites.equalsIgnoreCase("None")) {
             return true;
         }
 
-        for (Course completedCourse : completedCourses) {
-            if (completedCourse.getCourseCode().equals(prerequisites)) {
-                return true;
+        String[] requiredCourses = prerequisites.split(",\\s*");
+
+        for (String requiredCourse : requiredCourses) {
+            boolean isCompleted = false;
+
+            for (Course completedCourse : completedCourses) {
+                if (completedCourse.getCourseCode().equalsIgnoreCase(requiredCourse)) {
+                    isCompleted = true;
+                    break;
+                }
+            }
+
+            if (!isCompleted) {
+                return false;
             }
         }
-        return false;
+
+        return true;
     }
 
     public void registerForCourse(String courseCode) {
+        viewAvailableCourses();
+
         List<Course> availableCourses = CourseCatalog.getCoursesForSemester(this.semester);
         Course selectedCourse = null;
 
@@ -181,6 +194,7 @@ public class Student extends User {
         }
 
         registeredCourses.add(selectedCourse);
+        currentCourses.add(selectedCourse);
         totalCredits = newTotalCredits;
         System.out.println("Successfully registered for course: " + selectedCourse.getCourseCode());
     }
@@ -206,6 +220,18 @@ public class Student extends User {
     }
 
     public void completeSemester() {
+        if (registeredCourses.isEmpty()) {
+            System.out.println("Cannot complete the semester. No courses registered.");
+            return;
+        }
+
+        for (Course course : registeredCourses) {
+            if (course.getGrade().equals("Not Assigned")) {
+                System.out.println("Cannot complete the semester. Grade not assigned for course: " + course.getCourseCode());
+                return;
+            }
+        }
+
         this.semester++;
         completedCourses.addAll(registeredCourses);
         registeredCourses.clear();

@@ -140,7 +140,7 @@ public class UserService {
                 case 2:
                     AdminService.manageStudents(scanner);
                 case 3:
-                    AdminService.manageComplaints(scanner);
+                    AdminService.handleComplaintManagement(scanner);
                 case 4:
                     return;
                 default:

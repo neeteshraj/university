@@ -5,6 +5,7 @@ import main.users.Administrator;
 import main.users.Student;
 import main.users.User;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -50,7 +51,7 @@ public class UserData {
     }
 
     public static List<Complaint> getAllComplaints() {
-        return new ArrayList<>(complaints); // Return a copy of the complaints list
+        return new ArrayList<>(complaints);
     }
 
     public static List<Student> getStudents() {
@@ -66,5 +67,17 @@ public class UserData {
                 .map(user -> (Student) user)
                 .findFirst()
                 .orElse(null);
+    }
+
+    public static List<Complaint> filterComplaintsByStatus(String status) {
+        return complaints.stream()
+                .filter(c -> c.getStatus().equalsIgnoreCase(status))
+                .collect(Collectors.toList());
+    }
+
+    public static List<Complaint> filterComplaintsByDate(LocalDate date) {
+        return complaints.stream()
+                .filter(c -> c.getSubmissionDate().toLocalDate().isEqual(date))
+                .collect(Collectors.toList());
     }
 }
