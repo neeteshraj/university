@@ -1,6 +1,7 @@
 package main.services;
 
 import main.complaints.Complaint;
+import main.courses.Course;
 import main.data.UserData;
 import main.users.Administrator;
 import main.users.Professor;
@@ -9,6 +10,7 @@ import main.users.User;
 
 import java.util.List;
 import java.util.Scanner;
+import java.util.ArrayList;
 
 public class UserService {
 
@@ -18,7 +20,7 @@ public class UserService {
         System.out.println("2. Professor");
 
         int roleChoice = scanner.nextInt();
-        scanner.nextLine();
+        scanner.nextLine(); // Consume newline character
 
         System.out.println("Enter name:");
         String name = scanner.nextLine();
@@ -40,7 +42,8 @@ public class UserService {
             UserData.addUser(new Student(name, email, password, branchName, 1));
             System.out.println("Student account created.");
         } else if (roleChoice == 2) {
-            UserData.addUser(new Professor(name, email, password));
+            List<Course> emptyAssignedCourses = new ArrayList<>();
+            UserData.addUser(new Professor(name, email, password, emptyAssignedCourses));
             System.out.println("Professor account created.");
         } else {
             System.out.println("Invalid role choice.");
@@ -108,6 +111,25 @@ public class UserService {
     public static void loginProfessor(Scanner scanner, Professor professor) {
         System.out.println("Login successful! Welcome, " + professor.getName() + " (Professor)");
 
+        while (true) {
+            professor.displayMenu();
+            int choice = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (choice) {
+                case 1:
+                    professor.viewAssignedCourses();
+                    break;
+                case 2:
+                    professor.manageCourses();
+                    break;
+                case 3:
+                    System.out.println("Logged out.");
+                    return;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+        }
     }
 
     public static void adminLogin(Scanner scanner) {

@@ -51,6 +51,7 @@ public class AdminService {
 
     public static void addCourse(Scanner scanner) {
         System.out.println("Add Course");
+
         System.out.println("Enter course code:");
         String courseCode = scanner.nextLine();
 
@@ -77,8 +78,17 @@ public class AdminService {
         System.out.println("Enter location:");
         String location = scanner.nextLine();
 
-        Course course = new Course(courseCode, title, professor, credits, prerequisites, timings, semester, location);
+        // New fields
+        System.out.println("Enter enrollment limit:");
+        int enrollmentLimit = scanner.nextInt();
+        scanner.nextLine(); // Consume newline
+
+        System.out.println("Enter syllabus:");
+        String syllabus = scanner.nextLine();
+
+        Course course = new Course(courseCode, title, professor, credits, prerequisites, timings, semester, location, enrollmentLimit, syllabus);
         CourseData.addCourse(course);
+
         System.out.println("Course added successfully.");
     }
 
@@ -182,6 +192,9 @@ public class AdminService {
                     deleteCourse(scanner);
                     break;
                 case 4:
+                    assignProfessorToCourse(scanner);
+                    break;
+                case 5:
                     return;
                 default:
                     System.out.println("Invalid choice. Please try again.");
@@ -401,6 +414,28 @@ public class AdminService {
 
         complaint.setStatus("Pending");
         System.out.println("Complaint status updated to pending.");
+    }
+
+    public static void assignProfessorToCourse(Scanner scanner) {
+        System.out.println("Assign Professor to Course");
+
+        System.out.println("Enter course code:");
+        String courseCode = scanner.nextLine();
+
+        Course course = CourseData.getCourseByCode(courseCode);
+
+        if (course == null) {
+            System.out.println("Course not found.");
+            return;
+        }
+
+        System.out.println("Enter professor's name:");
+        String professorName = scanner.nextLine();
+
+        // Set the professor to the course
+        course.setProfessor(professorName);
+
+        System.out.println("Professor assigned successfully to the course.");
     }
 
     private static void printComplaintDetails(Complaint complaint) {

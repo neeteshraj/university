@@ -17,6 +17,15 @@ public class CourseData {
         courses.add(course);
     }
 
+    public static Course getCourseByCode(String courseCode) {
+        for (Course course : courses) {
+            if (course.getCourseCode().equals(courseCode)) {
+                return course;
+            }
+        }
+        return null;
+    }
+
     public static boolean deleteCourse(String courseCode) {
         Iterator<Course> iterator = courses.iterator();
         while (iterator.hasNext()) {

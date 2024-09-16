@@ -20,6 +20,19 @@ public class Student extends User {
         this.semester = semester;
     }
 
+    public String getAcademicStanding() {
+        double cgpa = calculateCGPA();
+        if (cgpa >= 3.5) {
+            return "Excellent";
+        } else if (cgpa >= 3.0) {
+            return "Good";
+        } else if (cgpa >= 2.5) {
+            return "Average";
+        } else {
+            return "Poor";
+        }
+    }
+
     public List<Course> getCurrentCourses() {
         return currentCourses != null ? currentCourses : new ArrayList<>();
     }
