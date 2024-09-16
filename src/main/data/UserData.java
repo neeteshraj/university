@@ -1,7 +1,9 @@
 package main.data;
 
 import main.complaints.Complaint;
+import main.courses.Course;
 import main.users.Administrator;
+import main.users.Professor;
 import main.users.Student;
 import main.users.User;
 
@@ -16,6 +18,29 @@ public class UserData {
 
     static {
         users.add(new Administrator("Admin", "admin@university.com", "admin123"));
+
+        //students
+        users.add(new Student("John Doe", "john.doe@university.com", "password123", "Computer Science", 1));
+        users.add(new Student("Jane Smith", "jane.smith@university.com", "password456", "Mathematics", 2));
+        users.add(new Student("Mike Johnson", "mike.johnson@university.com", "password789", "Physics", 3));
+
+        // Professors
+        Professor professor1 = new Professor("Dr. Alice Brown", "alice.brown@university.com", "prof123", "Computer Science");
+        Professor professor2 = new Professor("Dr. Bob White", "bob.white@university.com", "prof456", "Mathematics");
+        Professor professor3 = new Professor("Dr. Carol Green", "carol.green@university.com", "prof789", "Physics");
+
+        // Assign courses to professors
+        Course csCourse = CourseData.getCourseByCode("CS101");
+        Course mathCourse = CourseData.getCourseByCode("MATH201");
+        Course physicsCourse = CourseData.getCourseByCode("PHY301");
+
+        professor1.assignCourse(csCourse);
+        professor2.assignCourse(mathCourse);
+        professor3.assignCourse(physicsCourse);
+
+        users.add(professor1);
+        users.add(professor2);
+        users.add(professor3);
     }
 
     public static void addUser(User user) {

@@ -43,7 +43,7 @@ public class UserService {
             System.out.println("Student account created.");
         } else if (roleChoice == 2) {
             List<Course> emptyAssignedCourses = new ArrayList<>();
-            UserData.addUser(new Professor(name, email, password, emptyAssignedCourses));
+            UserData.addUser(new Professor(name, email, password, "Computer Science", emptyAssignedCourses));
             System.out.println("Professor account created.");
         } else {
             System.out.println("Invalid role choice.");
@@ -124,7 +124,6 @@ public class UserService {
                     professor.manageCourses();
                     break;
                 case 3:
-                    System.out.println("Logged out.");
                     return;
                 default:
                     System.out.println("Invalid choice. Please try again.");

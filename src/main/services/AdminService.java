@@ -176,7 +176,8 @@ public class AdminService {
             System.out.println("1. View Courses");
             System.out.println("2. Add Course");
             System.out.println("3. Delete Course");
-            System.out.println("4. Go Back");
+            System.out.println("4. Assign Course to Professor");
+            System.out.println("5. Go Back");
 
             int choice = scanner.nextInt();
             scanner.nextLine();

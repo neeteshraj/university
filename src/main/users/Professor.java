@@ -1,35 +1,74 @@
 package main.users;
 
 import main.courses.Course;
+import main.data.UserData;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class Professor extends User {
+    private String department;
     private List<Course> assignedCourses;
 
-    public Professor(String name, String email, String password, List<Course> assignedCourses) {
+    // Constructor for creating a Professor with department and empty assignedCourses list
+    public Professor(String name, String email, String password, String department) {
         super(name, email, password);
-        this.assignedCourses = assignedCourses;
+        this.department = department;
+        this.assignedCourses = new ArrayList<>();
+    }
+
+    // Constructor for creating a Professor with department and a list of assignedCourses
+    public Professor(String name, String email, String password, String department, List<Course> assignedCourses) {
+        super(name, email, password);
+        this.department = department;
+        this.assignedCourses = assignedCourses != null ? assignedCourses : new ArrayList<>();
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
+    public List<Course> getAssignedCourses() {
+        return assignedCourses;
+    }
+
+    public void assignCourse(Course course) {
+        assignedCourses.add(course);
+    }
+
+    public void removeCourse(Course course) {
+        assignedCourses.remove(course);
     }
 
     @Override
     public void displayMenu() {
-        System.out.println("Professor Menu: \n1. View Courses \n2. Manage Courses \n3. View Enrolled Students");
         Scanner scanner = new Scanner(System.in);
-        int choice = scanner.nextInt();
+        while (true) {
+            System.out.println("Professor Menu: \n1. View Courses \n2. Manage Courses \n3. View Enrolled Students \n4. Logout");
+            int choice = scanner.nextInt();
+            scanner.nextLine();
 
-        switch (choice) {
-            case 1:
-                viewAssignedCourses();
-                break;
-            case 2:
-                manageCourses();
-                break;
-            case 3:
-                viewEnrolledStudents();
-                break;
-            default:
-                System.out.println("Invalid choice. Please select a valid option.");
+            switch (choice) {
+                case 1:
+                    viewAssignedCourses();
+                    break;
+                case 2:
+                    manageCourses();
+                    break;
+                case 3:
+                    viewEnrolledStudents();
+                    break;
+                case 4:
+                    System.out.println("Returning to the main menu...");
+                    return;
+                default:
+                    System.out.println("Invalid choice. Please select a valid option.");
+            }
         }
     }
 
@@ -44,6 +83,11 @@ public class Professor extends User {
             System.out.println(course);
             System.out.println("================================");
         }
+
+        // Option to go back to the menu
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Press Enter to go back to the menu...");
+        scanner.nextLine();
     }
 
     public void manageCourses() {
@@ -52,12 +96,13 @@ public class Professor extends User {
             return;
         }
 
+        Scanner scanner = new Scanner(System.in);
+
         System.out.println("Select a course to manage:");
         for (int i = 0; i < assignedCourses.size(); i++) {
             System.out.println((i + 1) + ". " + assignedCourses.get(i).getTitle());
         }
 
-        Scanner scanner = new Scanner(System.in);
         int courseChoice = scanner.nextInt();
         scanner.nextLine(); // Consume newline
 
@@ -111,6 +156,10 @@ public class Professor extends User {
         }
 
         System.out.println("Course details updated successfully.");
+
+        // Option to go back to the menu
+        System.out.println("Press Enter to go back to the menu...");
+        scanner.nextLine();
     }
 
     public void viewEnrolledStudents() {
@@ -127,7 +176,7 @@ public class Professor extends User {
         }
 
         int courseChoice = scanner.nextInt();
-        scanner.nextLine();
+        scanner.nextLine(); // Consume newline
 
         if (courseChoice < 1 || courseChoice > assignedCourses.size()) {
             System.out.println("Invalid course selection.");
@@ -149,5 +198,9 @@ public class Professor extends User {
                 System.out.println("------------------------------");
             }
         }
+
+        System.out.println("Press Enter to go back to the menu...");
+        scanner.nextLine();
     }
 }
+
